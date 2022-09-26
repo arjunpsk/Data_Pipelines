@@ -15,3 +15,4 @@ def get_data():
     values = json.loads(resp.data)
     print(values)
     return values
+get_data()
