@@ -1,3 +1,4 @@
+
 import gspread
 
 import plotly.express as px
@@ -9,20 +10,17 @@ import streamlit as st
 def read_data():
     gc = gspread.service_account(filename="service_account.json")
     sh = gc.open("CAB Data Pipeline").get_worksheet(0) # index 0 = sheet1, index 1 = sheet2, etc.
-
-    row_1 = sh.row_values(1)
-    row_2 = sh.row_values(2)
-    print(row_1, row_2)
-    df = pd.DataFrame({'date': row_1, 'closing_price': row_2})
+    df = pd.DataFrame(sh.get_all_records())
     return df
 
 def plot_data():
     df = read_data()
-    df['closing_price'] = df['closing_price'].astype(float)
+    df['price'] = df['price'].astype(float)
 
     fig = px.line(data_frame = df, 
                 x = 'date' ,
-                y = 'closing_price')
+                y = 'price')
     st.plotly_chart(fig)
     
 plot_data()
+
